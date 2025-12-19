@@ -1,4 +1,20 @@
+import { useState } from 'react'
+
 export function Login() {
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+	})
+	const { email, password } = formData
+
+	function changeHandler(e) {
+		setFormData({ ...formData, [e.target.name]: e.target.value })
+	}
+
+	function clickHandler() {
+		console.log(email, password)
+	}
+
 	return (
 		<main>
 			<section className='vh-lg-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center'>
@@ -35,8 +51,11 @@ export function Login() {
 											className='form-control'
 											placeholder='example@company.com'
 											id='email'
+											name='email'
 											autoFocus
 											required
+											value={email}
+											onChange={changeHandler}
 										/>
 									</div>
 								</div>
@@ -69,7 +88,10 @@ export function Login() {
 												placeholder='Password'
 												className='form-control'
 												id='password'
+												name='password'
 												required
+												value={password}
+												onChange={changeHandler}
 											/>
 										</div>
 									</div>
@@ -101,8 +123,9 @@ export function Login() {
 								</div>
 								<div className='d-grid'>
 									<button
-										type='submit'
+										type='button'
 										className='btn btn-gray-800'
+										onClick={clickHandler}
 									>
 										Sign in
 									</button>
