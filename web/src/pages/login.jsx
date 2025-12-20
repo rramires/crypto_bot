@@ -1,18 +1,34 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { doLogin } from '../services/AuthService'
 
 export function Login() {
+	const navigate = useNavigate()
+
 	const [formData, setFormData] = useState({
-		email: '',
-		password: '',
+		email: 'fulano@email.com',
+		password: 'abc123',
 	})
 	const { email, password } = formData
+
+	const [error, setError] = useState('')
 
 	function changeHandler(e) {
 		setFormData({ ...formData, [e.target.name]: e.target.value })
 	}
 
 	function clickHandler() {
-		console.log(email, password)
+		doLogin(email, password)
+			.then((response) => {
+				localStorage.setItem('token', response.token)
+				localStorage.setItem('id', response.id)
+				navigate('/dashboard')
+			})
+			.catch((err) => {
+				console.error(err)
+				setError('Invalid user or/and password!')
+			})
 	}
 
 	return (
@@ -130,6 +146,11 @@ export function Login() {
 										Sign in
 									</button>
 								</div>
+								{error && (
+									<div className='mt-2 text-center alert alert-danger'>
+										{error}
+									</div>
+								)}
 							</form>
 
 							{/* <div className='mt-3 mb-4 text-center'>
