@@ -3,6 +3,7 @@ import express from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 
+import { doLogin, doLogout } from './controllers/auth-controller.js'
 import { errorMiddleware } from './middlewares/error-middelware.js'
 
 export const app = express()
@@ -18,9 +19,8 @@ app.use(
 app.use(morgan('dev'))
 
 // routes
-app.use('/login', (req, res) => {
-	//res.send('Login !')
-})
+app.post('/login', doLogin)
+app.get('/logout', doLogout)
 
 app.use('/logout', (req, res) => {
 	res.send('Logout !')
@@ -29,7 +29,7 @@ app.use('/logout', (req, res) => {
 // error
 app.use(errorMiddleware)
 
-// root
+// default
 app.use('/', (req, res) => {
 	res.send('Hello from Express !')
 })
