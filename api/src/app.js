@@ -20,11 +20,7 @@ app.use(morgan('dev'))
 
 // routes
 app.post('/login', doLogin)
-app.get('/logout', doLogout)
-
-app.use('/logout', (req, res) => {
-	res.send('Logout !')
-})
+app.post('/logout', doLogout)
 
 // error
 app.use(errorMiddleware)
