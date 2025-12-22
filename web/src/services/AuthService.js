@@ -1,16 +1,19 @@
-//import axios from './BaseService'
+import axios from './BaseService'
+
+const API_URL = import.meta.env.VITE_API_URL
 
 export async function doLogin(email, password) {
-	// mock login
-	if (email === 'fulano@email.com' && password === 'abc123') {
-		return {
-			id: 1,
-			token: 'tokenValue',
-		}
-	}
-	throw new Error('401')
+	const loginUrl = `${API_URL}/login`
+
+	const response = await axios.post(loginUrl, { email, password })
+
+	return response.data
 }
 
 export async function doLogout() {
-	return true
+	const logoutUrl = `${API_URL}/logout`
+
+	const response = await axios.post(logoutUrl)
+
+	return response.data
 }
