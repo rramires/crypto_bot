@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 
 import { doLogin, doLogout } from './controllers/auth-controller.js'
+import { authMiddleware } from './middlewares/auth-middleware.js'
 import { errorMiddleware } from './middlewares/error-middelware.js'
 
 export const app = express()
@@ -18,9 +19,14 @@ app.use(
 )
 app.use(morgan('dev'))
 
-// routes
+// public routes
 app.post('/login', doLogin)
 app.post('/logout', doLogout)
+
+// private routes
+app.use('/exchange', authMiddleware, (req, res) => {
+	res.send('Exchange area!')
+})
 
 // error
 app.use(errorMiddleware)
