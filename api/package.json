@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --ext .js --fix",
     "check": "prettier --check \"src/**/*.js\"",
     "format": "prettier --write \"src/**/*.js\"",
-    "createdb": "npx sequelize-cli db:create"
+    "createdb": "npx sequelize-cli db:create", 
+    "migratedb": "npx sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",
