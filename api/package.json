@@ -13,7 +13,8 @@
     "check": "prettier --check \"src/**/*.js\"",
     "format": "prettier --write \"src/**/*.js\"",
     "createdb": "npx sequelize-cli db:create", 
-    "migratedb": "npx sequelize-cli db:migrate"
+    "migratedb": "npx sequelize-cli db:migrate",
+    "seeddb": "npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",
