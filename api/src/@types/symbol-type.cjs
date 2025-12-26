@@ -8,12 +8,12 @@ const symbolType = {
 		comment: 'Trading Pair, ex: BTCUSDT',
 	},
 	base: {
-		type: DataTypes.STRING(10),
+		type: DataTypes.STRING(20),
 		allowNull: false,
 		comment: 'Base is 1st asset, ex BTC',
 	},
 	quote: {
-		type: DataTypes.STRING(10),
+		type: DataTypes.STRING(20),
 		allowNull: false,
 		comment: 'Base is 2nd asset, ex USDT',
 	},

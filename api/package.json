@@ -12,7 +12,7 @@
     "lint:fix": "eslint . --ext .js --fix",
     "check": "prettier --check \"src/**/*.js\"",
     "format": "prettier --write \"src/**/*.js\"",
-    "createdb": "npx sequelize-cli db:create", 
+    "createdb": "npx sequelize-cli db:create",
     "migratedb": "npx sequelize-cli db:migrate",
     "seeddb": "npx sequelize-cli db:seed:all"
   },
@@ -28,6 +28,7 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "mysql2": "^3.16.0",
+    "node-binance-api": "^1.0.20",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {

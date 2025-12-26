@@ -1,9 +1,9 @@
 import { symbolsModel } from '../models/symbols-model.js'
 
-export function deleteAll() {
+export function deleteAllSymbols() {
 	return symbolsModel.destroy({ truncate: true })
 }
 
-export function bulkInsert(symbols) {
+export function bulkInsertSymbols(symbols) {
 	return symbolsModel.bulkCreate(symbols)
 }
