@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-import { getUserByEmail } from '../repositories/userRepository.js'
+import { getUserByEmail } from '../repositories/user-repository.js'
 
 export async function doLogin(req, res) {
 	const { email, password } = req.body
