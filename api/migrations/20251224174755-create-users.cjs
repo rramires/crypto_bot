@@ -1,6 +1,6 @@
 'use strict'
 
-const { userType } = require('../src/@types/userType.cjs')
+const { userType } = require('../src/@types/user-type.cjs')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
