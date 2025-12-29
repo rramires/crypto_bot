@@ -3,18 +3,19 @@ import { useLocation } from 'react-router-dom'
 
 import { SidebarItem } from './sidebar-item'
 
+const pageTitles = {
+	'/dashboard': 'Dashboard',
+	'/reports': 'Reports',
+	'/orders': 'Orders',
+	'/automations': 'Automations',
+	'/ordertemplates': 'Order Templates',
+	'/monitors': 'Monitors',
+}
+
 export function Sidebar() {
 	const location = useLocation()
 
 	useEffect(() => {
-		const pageTitles = {
-			'/dashboard': 'Dashboard',
-			'/reports': 'Reports',
-			'/orders': 'Orders',
-			'/automations': 'Automations',
-			'/ordertemplates': 'Order Templates',
-			'/monitors': 'Monitors',
-		}
 		const pageTitle = pageTitles[location.pathname]
 		if (pageTitle) {
 			document.title = `CryptoBot - ${pageTitle}`
