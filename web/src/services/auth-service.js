@@ -1,4 +1,4 @@
-import axios from './BaseService'
+import axios from './base-service'
 
 const API_URL = import.meta.env.VITE_API_URL
 

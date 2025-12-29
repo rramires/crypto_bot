@@ -1,9 +1,9 @@
 import { TemplatePage } from '../template-page'
 
-export function Dashboard() {
+export function OrderTemplates() {
 	return (
 		<TemplatePage>
-			<h1>Dashboard</h1>
+			<h1>Order Templates</h1>
 		</TemplatePage>
 	)
 }

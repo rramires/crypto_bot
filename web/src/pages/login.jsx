@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { doLogin } from '../services/AuthService'
+import { doLogin } from '../services/auth-service'
 
 export function Login() {
 	const navigate = useNavigate()
 
 	const [formData, setFormData] = useState({
-		email: 'fulano@email.com',
+		email: 'def@email.com',
 		password: 'abc123',
 	})
 	const { email, password } = formData
