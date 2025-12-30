@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
+import { doLogout } from '../../services/auth-service'
 import { SidebarItem } from './sidebar-item'
 
 const pageTitles = {
@@ -14,6 +15,7 @@ const pageTitles = {
 
 export function Sidebar() {
 	const location = useLocation()
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		const pageTitle = pageTitles[location.pathname]
@@ -21,6 +23,19 @@ export function Sidebar() {
 			document.title = `CryptoBot - ${pageTitle}`
 		}
 	}, [location.pathname])
+
+	function onLogoutClick() {
+		doLogout()
+			.then(() => {
+				localStorage.removeItem('token')
+				localStorage.removeItem('id')
+				navigate('/')
+			})
+			.catch((err) => {
+				console.error(err)
+				navigate('/')
+			})
+	}
 
 	return (
 		<nav
@@ -69,9 +84,9 @@ export function Sidebar() {
 							>
 								<path d='M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z'></path>
 								<path
-									fill-rule='evenodd'
+									fillRule='evenodd'
 									d='M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z'
-									clip-rule='evenodd'
+									clipRule='evenodd'
 								></path>
 							</svg>
 						}
@@ -139,6 +154,7 @@ export function Sidebar() {
 					<SidebarItem
 						to='/#'
 						label='Logout'
+						onClick={onLogoutClick}
 						icon={
 							<svg
 								className='icon icon-xs me-2'
