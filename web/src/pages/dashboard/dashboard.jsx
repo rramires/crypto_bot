@@ -1,4 +1,5 @@
 import { TemplatePage } from '../template-page'
+import CandleChart from './candle-chart'
 
 export function Dashboard() {
 	return (
@@ -10,7 +11,7 @@ export function Dashboard() {
 				<div className='btn-btn-toolbar mb-0'>
 					{/* TODO: Symbols select and new manual order button. */}
 				</div>
-				{/* TODO: Candle chart. */}
+				<CandleChart />
 				<div className='row'>
 					<div className='col-6'>{/* TODO: 24h market. */}</div>
 					<div className='col-6'>{/* TODO: Wallet. */}</div>
