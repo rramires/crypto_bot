@@ -1,21 +1,16 @@
-// TradingViewWidget.jsx
 import { memo, useEffect, useRef } from 'react'
 
 function TradingViewWidget() {
 	const container = useRef()
+	const scriptInjected = useRef(false)
 
 	useEffect(() => {
-		// Container ref skip
 		const currentContainer = container.current
-		if (!currentContainer) {
+		if (!currentContainer || scriptInjected.current) {
 			return
 		}
 
-		// Skip multiple injections
-		const existingScript = currentContainer.querySelector('script')
-		if (existingScript) {
-			return
-		}
+		scriptInjected.current = true
 
 		const script = document.createElement('script')
 		script.src =
@@ -45,7 +40,7 @@ function TradingViewWidget() {
             "BINANCE:ETHUSDT",
             "BINANCE:SOLUSDT",
             "BINANCE:LTCUSDT",
-			"BINANCE:ETHBTC",
+            "BINANCE:ETHBTC",
             "BINANCE:SOLBTC",
             "BINANCE:LTCBTC"
           ],
@@ -60,20 +55,14 @@ function TradingViewWidget() {
           ],
           "autosize": true
         }`
-		currentContainer.appendChild(script)
 
-		// Cleanup container
-		return () => {
-			if (currentContainer) {
-				currentContainer.innerHTML = ''
-			}
-		}
+		currentContainer.appendChild(script)
 	}, [])
 
 	return (
 		<div
 			className='card cardDarkTw border-0 shadow'
-			style={{ width: '100%', height: 620 }}
+			style={{ width: '100%', height: 540 }}
 		>
 			<div className='card-body p-2'>
 				<div

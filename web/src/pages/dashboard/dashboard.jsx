@@ -10,10 +10,10 @@ export function Dashboard() {
 				className='d-flex justify-content-between flex-wrap align-items-center py-2
 			'
 			>
-				<div className='d-block mt-0'>
+				<div className='d-block mt-3'>
 					<h1 className='h4'>Dashboard</h1>
 				</div>
-				<div className='btn-btn-toolbar mb-0'>
+				<div className='btn-btn-toolbar mt-3'>
 					<NewOrderButton />
 				</div>
 			</div>
