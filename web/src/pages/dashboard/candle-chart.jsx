@@ -32,7 +32,7 @@ function TradingViewWidget() {
           "hide_legend": false,
           "hide_volume": false,
           "hotlist": false,
-          "interval": "60",
+          "interval": "15",
           "locale": "en",
           "save_image": true,
           "style": "1",
@@ -44,7 +44,10 @@ function TradingViewWidget() {
           "watchlist": [
             "BINANCE:ETHUSDT",
             "BINANCE:SOLUSDT",
-            "BINANCE:LTCUSDT"
+            "BINANCE:LTCUSDT",
+			"BINANCE:ETHBTC",
+            "BINANCE:SOLBTC",
+            "BINANCE:LTCBTC"
           ],
           "withdateranges": true,
           "compareSymbols": [],
@@ -70,7 +73,7 @@ function TradingViewWidget() {
 	return (
 		<div
 			className='card cardDarkTw border-0 shadow'
-			style={{ width: '100%', height: 520 }}
+			style={{ width: '100%', height: 620 }}
 		>
 			<div className='card-body p-2'>
 				<div
@@ -83,4 +86,4 @@ function TradingViewWidget() {
 	)
 }
 
-export default memo(TradingViewWidget)
+export const CandleChart = memo(TradingViewWidget)
