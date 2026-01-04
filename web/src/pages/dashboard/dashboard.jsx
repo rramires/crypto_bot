@@ -1,3 +1,4 @@
+import { Wallet } from '../../components/wallet/wallet'
 import { NewOrderButton } from '../orders/new-order-button'
 import { TemplatePage } from '../template-page'
 import { CandleChart } from './candle-chart'
@@ -22,7 +23,9 @@ export function Dashboard() {
 				<div className='col-6'>
 					<Ticker />
 				</div>
-				<div className='col-6'>{/* TODO: Wallet. */}</div>
+				<div className='col-6'>
+					<Wallet />
+				</div>
 			</div>
 		</TemplatePage>
 	)

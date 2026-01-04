@@ -107,7 +107,7 @@ export function Ticker() {
 							</tbody>
 						</table>
 					</div>
-					<div className='m-4 mt-'>
+					<div className='m-3 mt-3 ms-4'>
 						Summary from last 24h to now: Close, Open, High and Low
 					</div>
 				</div>
