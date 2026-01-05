@@ -25,4 +25,14 @@ export class Exchange {
 		this.binance.useServerTime()
 		return this.binance.balance()
 	}
+
+	tickerStream(callback) {
+		this.binance.websockets.prevDay(
+			null,
+			(data, converted) => {
+				callback(converted)
+			},
+			true,
+		)
+	}
 }
