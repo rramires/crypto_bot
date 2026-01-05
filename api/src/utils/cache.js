@@ -6,10 +6,17 @@ export class Cache {
 	}
 
 	async get(key) {
-		this.MEMORY[key]
+		return this.MEMORY[key]
 	}
 
 	async set(key, value) {
 		this.MEMORY[key] = value
+	}
+
+	async search(pattern) {
+		if (!pattern) {
+			return { ...this.MEMORY }
+		}
+		// TODO: Implement search with pattern
 	}
 }
