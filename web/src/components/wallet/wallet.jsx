@@ -4,12 +4,15 @@ import { getBalance } from '../../services/exchange-service'
 import { WalletRow } from './wallet-row'
 
 export function Wallet() {
-	const [fiat, setFiat] = useState('~USD 100.00')
+	const [fiat, setFiat] = useState('')
 	const [balances, setBalances] = useState([])
+	const [isLoading, setIsloading] = useState(false)
 
 	useEffect(() => {
-		getBalance()
-			.then((info) => {
+		async function loadBalance() {
+			setIsloading(true)
+			try {
+				const info = await getBalance()
 				/* info 
 				{
 					"BTC": {
@@ -24,6 +27,7 @@ export function Wallet() {
 							symbol: item[0],
 							available: item[1].available,
 							onOrder: item[1].onOrder,
+							fiatEst: item[1].fiatEst,
 						}
 					})
 					.sort((a, b) => {
@@ -36,12 +40,17 @@ export function Wallet() {
 						return 0
 					})
 
+				console.log(balances)
+
 				setBalances(balances)
 				setFiat(info.fiatEstimate)
-			})
-			.catch((err) => {
+			} catch (err) {
 				console.error(err.response ? err.response.data : err)
-			})
+			} finally {
+				setIsloading(false)
+			}
+		}
+		loadBalance()
 	}, [])
 
 	return (
@@ -80,19 +89,30 @@ export function Wallet() {
 									>
 										Total
 									</th> */}
+									<th
+										className='border-bottom col-2'
+										scope='col'
+									>
+										~USD
+									</th>
 								</tr>
 							</thead>
 							<tbody>
-								{balances &&
-									balances.length &&
+								{!isLoading && balances && balances.length ? (
 									balances.map((item) => (
 										<WalletRow
 											key={item}
 											symbol={item.symbol}
 											available={item.available}
 											onOrder={item.onOrder}
+											fiatEst={item.fiatEst}
 										/>
-									))}
+									))
+								) : (
+									<tr className='mb-3'>
+										<td colSpan={3}>Loading...</td>
+									</tr>
+								)}
 							</tbody>
 						</table>
 					</div>

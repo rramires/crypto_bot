@@ -8,9 +8,13 @@ const TOP_COINS = [
 	'ETHUSDT',
 	'SOLUSDT',
 	'LTCUSDT',
+	'DOGEUSDT',
+	'XRPUSDT',
 	'ETHBTC',
 	'SOLBTC',
 	'LTCBTC',
+	'DOGEBTC',
+	'XRPBTC',
 ]
 
 export function Ticker() {

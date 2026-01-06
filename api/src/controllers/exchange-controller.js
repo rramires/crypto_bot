@@ -12,18 +12,20 @@ export async function getBalance(req, res, next) {
 	try {
 		const info = await exchange.balance()
 
-		let total = 0
 		const coins = Object.keys(info)
-		await Promise.all(
+		const partials = await Promise.all(
 			coins.map(async (coin) => {
 				let partial = parseFloat(info[coin].available) + parseFloat(info[coin].onOrder)
 				if (partial > 0) {
 					partial = await brain.tryFiatConversion(coin, partial, FIAT)
-					info[coin].fiatEstimate = partial
-					total += partial
+					info[coin].fiatEst = partial.toFixed(2)
+					return partial
 				}
+				return 0
 			}),
 		)
+
+		const total = partials.reduce((sum, value) => sum + value, 0)
 
 		info.fiatEstimate = `~${FIAT} ${total.toFixed(2)}`
 

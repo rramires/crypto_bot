@@ -88,7 +88,7 @@ export class Brain {
 		}
 		// baseAsset is cryptocurrency
 		for (const key of DOLLAR_COINS) {
-			const converted = await this.getStableConversion(baseAsset, DOLLAR_COINS[key], baseQty)
+			const converted = await this.getStableConversion(baseAsset, key, baseQty)
 			if (converted > 0) {
 				return converted
 			}
@@ -126,7 +126,7 @@ export class Brain {
 
 	buildMemoryKey(symbol, index, interval = undefined) {
 		const indexKey = interval ? `${index}_${interval}` : index
-		return interval ? `${symbol}:${indexKey}` : index // BTCUSDT:TICKER, BTCUSDT:RSI_1m,
+		return `${symbol}:${indexKey}` // BTCUSDT:TICKER, BTCUSDT:RSI_1m,
 	}
 
 	async setCache(symbol, index, interval, value, execAutomations) {

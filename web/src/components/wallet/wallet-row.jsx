@@ -1,4 +1,4 @@
-export function WalletRow({ symbol, available, onOrder }) {
+export function WalletRow({ symbol, available, onOrder, fiatEst }) {
 	// skip
 	if (!parseFloat(available) && !parseFloat(onOrder)) {
 		return null
@@ -19,6 +19,7 @@ export function WalletRow({ symbol, available, onOrder }) {
 			{/* <td className='text-gray-900'>
 				{(onOrder + available).substring(0, 10)}
 			</td> */}
+			<td className='text-gray-900'>{fiatEst}</td>
 		</tr>
 	)
 }
