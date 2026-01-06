@@ -22,6 +22,7 @@ const TICKER_FIELDS = [
 ]
 
 const FIAT_COINS = ['BRL', 'EUR', 'GBP']
+
 const DOLLAR_COINS = [
 	'USD',
 	'USDT',
@@ -59,6 +60,7 @@ export class Brain {
 		if (ticker && ticker.current) {
 			return parseFloat(fiatQty) / ticker.current.close
 		}
+
 		return 0
 	}
 
@@ -66,10 +68,12 @@ export class Brain {
 		if (DOLLAR_COINS.includes(baseAsset)) {
 			return baseQty
 		}
+
 		const ticker = await this.getMemory(baseAsset + quoteAsset, 'TICKER')
 		if (ticker && ticker.current) {
 			return parseFloat(baseQty) * ticker.current.close
 		}
+
 		return 0
 	}
 
@@ -165,9 +169,6 @@ export class Brain {
 			previous: currentMemory?.current ?? ticker,
 			current: ticker,
 		}
-		/* const newMemoryItem = {}
-		newMemoryItem.previous = currentMemory ? currentMemory.current : ticker
-		newMemoryItem.current = ticker */
 
 		this.setCache(symbol, index, null, newMemoryItem, execAutomations)
 	}
