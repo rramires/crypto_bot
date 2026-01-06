@@ -21,6 +21,22 @@ const TICKER_FIELDS = [
 	'quoteVolume',
 ]
 
+const FIAT_COINS = ['BRL', 'EUR', 'GBP']
+const DOLLAR_COINS = [
+	'USD',
+	'USDT',
+	'USDC',
+	'DAI',
+	'PYUSD',
+	'USD1',
+	'USDG',
+	'RLUSD',
+	'USDD',
+	'FDUSD',
+	'TUSD',
+	'USDP',
+]
+
 export class Brain {
 	static instance
 
@@ -36,6 +52,72 @@ export class Brain {
 		this.cache = new Cache()
 
 		// TODO: Init the brain
+	}
+
+	async getFiatConversion(stablecoin, fiatCoin, fiatQty) {
+		const ticker = await this.getMemory(stablecoin + fiatCoin, 'TICKER')
+		if (ticker && ticker.current) {
+			return parseFloat(fiatQty) / ticker.current.close
+		}
+		return 0
+	}
+
+	async getStableConversion(baseAsset, quoteAsset, baseQty) {
+		if (DOLLAR_COINS.includes(baseAsset)) {
+			return baseQty
+		}
+		const ticker = await this.getMemory(baseAsset + quoteAsset, 'TICKER')
+		if (ticker && ticker.current) {
+			return parseFloat(baseQty) * ticker.current.close
+		}
+		return 0
+	}
+
+	async tryUsdConversion(baseAsset, baseQty) {
+		// baseAsset is dollarized
+		if (DOLLAR_COINS.includes(baseAsset)) {
+			return baseQty
+		}
+		// baseAsset is fiat
+		if (FIAT_COINS.includes(baseAsset)) {
+			return await this.getFiatConversion('USDT', baseAsset, baseQty)
+		}
+		// baseAsset is cryptocurrency
+		for (const key of DOLLAR_COINS) {
+			const converted = await this.getStableConversion(baseAsset, DOLLAR_COINS[key], baseQty)
+			if (converted > 0) {
+				return converted
+			}
+		}
+		return 0
+	}
+
+	async tryFiatConversion(baseAsset, baseQty, fiat) {
+		if (fiat) {
+			fiat = fiat.toUpperCase()
+		}
+		if (FIAT_COINS.includes(baseAsset) && baseAsset === fiat) {
+			return baseQty
+		}
+
+		// Conversion to dollars
+		const usd = await this.tryUsdConversion(baseAsset, baseQty)
+		if (fiat === 'USD' || !fiat) {
+			return usd
+		}
+
+		// Conversion to other FIATs
+		let ticker = await this.getMemory('USDT' + fiat, 'TICKER')
+		if (ticker && ticker.current) {
+			return usd * ticker.current.close
+		}
+		ticker = await this.getMemory(fiat + 'USDT', 'TICKER')
+		if (ticker && ticker.current) {
+			return usd / ticker.current.close
+		}
+
+		// If not possible, returns in dollar
+		return usd
 	}
 
 	buildMemoryKey(symbol, index, interval = undefined) {
