@@ -40,8 +40,6 @@ export function Wallet() {
 						return 0
 					})
 
-				console.log(balances)
-
 				setBalances(balances)
 				setFiat(info.fiatEstimate)
 			} catch (err) {
@@ -101,7 +99,7 @@ export function Wallet() {
 								{!isLoading && balances && balances.length ? (
 									balances.map((item) => (
 										<WalletRow
-											key={item}
+											key={item.symbol}
 											symbol={item.symbol}
 											available={item.available}
 											onOrder={item.onOrder}

@@ -1,5 +1,3 @@
-import { where } from 'sequelize'
-
 import { userModel } from '../models/user-model.js'
 
 export function getUserByEmail(email) {

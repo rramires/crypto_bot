@@ -18,5 +18,11 @@ export class Cache {
 			return { ...this.MEMORY }
 		}
 		// TODO: Implement search with pattern
+		/* const keys = Object.keys(this.MEMORY).filter(key => key.includes(pattern))
+        const result = {}
+        keys.forEach(key => {
+            result[key] = this.MEMORY[key]
+        })
+        return result */
 	}
 }

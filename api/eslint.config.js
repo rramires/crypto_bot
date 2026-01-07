@@ -1,14 +1,13 @@
 import js from '@eslint/js'
-import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
 
-export default defineConfig([
+export default [
+	js.configs.recommended,
 	{
 		files: ['**/*.{js,mjs,cjs}'],
-		plugins: { js, 'simple-import-sort': simpleImportSort },
-		extends: ['js/recommended'],
+		plugins: { 'simple-import-sort': simpleImportSort },
 		languageOptions: { globals: globals.node },
 	},
 	{
@@ -20,4 +19,4 @@ export default defineConfig([
 		},
 	},
 	eslintConfigPrettier,
-])
+]

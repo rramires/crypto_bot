@@ -170,7 +170,7 @@ export class Brain {
 
 		// Stores the previous and the new values.
 		const newMemoryItem = {
-			previous: currentMemory?.current ?? ticker,
+			previous: currentMemory ? currentMemory.current : ticker,
 			current: ticker,
 		}
 
