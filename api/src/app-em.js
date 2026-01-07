@@ -2,26 +2,35 @@ import { Brain } from './brain.js'
 import { Exchange } from './utils/exchange.js'
 import { logger } from './utils/logger.js'
 
+let WSS
+
 function startTickerMonitor() {
 	const exchange = new Exchange()
 	exchange.tickerStream(async (markets) => {
-		const brain = Brain.getInstance()
+		try {
+			const brain = Brain.getInstance()
 
-		markets.map((mkt) => brain.updateMemory(mkt.symbol, 'TICKER', null, mkt))
+			const results = await Promise.all(
+				markets.map((mkt) => brain.updateMemory(mkt.symbol, 'TICKER', null, mkt)),
+			)
 
-		// TODO: Notify the user if any automation has been triggered.
+			const validResults = results.filter(Boolean)
+			validResults.forEach((res) => {
+				WSS.broadcast({ notification: res })
+			})
+		} catch (error) {
+			logger('M-TICKER', 'Error processing ticker data:', error)
+		}
 	})
 
-	logger('M-TIKER', 'Ticker Monitor has started!')
+	logger('M-TICKER', 'Ticker Monitor has started!')
 }
-
-let WSS
 
 export async function emInit(userId, wssInstance) {
 	WSS = wssInstance
 
-	// Test broadcast messages. Connect to ws://localhost:3000
-	// setInterval(() => WSS.broadcast({ message: new Date() }), 3000)
+	// Test broadcast messages with Postman. Connect to ws://localhost:3000?token=valid-JWT-token
+	//setInterval(() => WSS.broadcast({ message: new Date() }), 3000)
 
 	// Market monitoring
 	startTickerMonitor()

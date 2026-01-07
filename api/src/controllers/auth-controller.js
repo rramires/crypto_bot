@@ -37,6 +37,6 @@ export async function doLogout(req, res) {
 	res.sendStatus(200)
 }
 
-export function isBlackList(token) {
+export async function isBlackList(token) {
 	return blacklist[token]
 }

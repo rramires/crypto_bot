@@ -52,7 +52,7 @@ export async function syncSymbols() {
 				tickSize: priceFilter ? priceFilter.tickSize : '1',
 			}
 		})
-		.filter((s) => s) // exclude skips
+		.filter(Boolean) // exclude skips
 
 	//console.log(JSON.stringify(symbols))
 
