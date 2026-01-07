@@ -1,8 +1,6 @@
-import { createRequire } from 'module'
-
 import { database } from '../db.js'
+import { getType } from './model-base.js'
 
-const require = createRequire(import.meta.url)
-const { symbolType } = require('../@types/symbol-type.cjs')
+const { symbolType } = getType('../@types/symbol-type.cjs')
 
 export const symbolsModel = database.define('symbols', symbolType)

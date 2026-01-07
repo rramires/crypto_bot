@@ -1,8 +1,6 @@
-import { createRequire } from 'module'
-
 import { database } from '../db.js'
+import { getType } from './model-base.js'
 
-const require = createRequire(import.meta.url)
-const { userType } = require('../@types/user-type.cjs')
+const { userType } = getType('../@types/user-type.cjs')
 
 export const userModel = database.define('user', userType)
