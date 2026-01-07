@@ -153,8 +153,12 @@ export class Brain {
 		} else if (symbolOrKey) {
 			return this.cache.get(symbolOrKey)
 		} else {
-			return this.cache.getAll()
+			return this.cache.search()
 		}
+	}
+
+	async getMemoryFromKey(keyPattern) {
+		return this.cache.search(keyPattern)
 	}
 
 	async updateTickerMemory(symbol, index, ticker, execAutomations = true) {
@@ -170,7 +174,7 @@ export class Brain {
 			current: ticker,
 		}
 
-		this.setCache(symbol, index, null, newMemoryItem, execAutomations)
+		return this.setCache(symbol, index, null, newMemoryItem, execAutomations)
 	}
 
 	async updateMemory(symbol, index, interval, value, execAutomations = true) {
