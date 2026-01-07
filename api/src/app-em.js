@@ -15,7 +15,14 @@ function startTickerMonitor() {
 	logger('M-TIKER', 'Ticker Monitor has started!')
 }
 
-export async function emInit(userId) {
+let WSS
+
+export async function emInit(userId, wssInstance) {
+	WSS = wssInstance
+
+	// Test broadcast messages. Connect to ws://localhost:3000
+	// setInterval(() => WSS.broadcast({ message: new Date() }), 3000)
+
 	// Market monitoring
 	startTickerMonitor()
 
