@@ -43,7 +43,6 @@ async function verifyClient(info, callback) {
 	}
 	// JWT
 	const token = info.req.url.split('token=')[1]
-	console.log('token', token)
 
 	if (token) {
 		try {

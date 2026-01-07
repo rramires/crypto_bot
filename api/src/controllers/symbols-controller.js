@@ -15,7 +15,7 @@ export async function syncSymbols() {
 	const symbols = data.symbols
 		.map((item) => {
 			// skips
-			if ((!useBlvt && item.baseAsset.endsWith('UP')) || item.baseAsset.endsWith('DOWN')) {
+			if (!useBlvt && (item.baseAsset.endsWith('UP') || item.baseAsset.endsWith('DOWN'))) {
 				return false
 			}
 			if (
