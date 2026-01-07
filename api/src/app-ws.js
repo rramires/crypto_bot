@@ -1,7 +1,6 @@
-import jwt from 'jsonwebtoken'
 import { WebSocket, WebSocketServer } from 'ws'
 
-import { isBlackList } from './controllers/auth-controller.js'
+import { validateToken } from './utils/auth-service.js'
 import { logger } from './utils/logger.js'
 
 function onMessage(data) {
@@ -37,28 +36,18 @@ function corsValidation(origin) {
 }
 
 async function verifyClient(info, callback) {
-	// CORS
 	if (!corsValidation(info.origin)) {
 		return callback(false, 401)
 	}
-	// JWT
-	const token = info.req.url.split('token=')[1]
 
-	if (token) {
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			if (decoded) {
-				// Blacklist
-				const isBlackListed = await isBlackList(token)
-				if (!isBlackListed) {
-					return callback(true)
-				}
-			}
-		} catch (err) {
-			logger('system', err)
-		}
+	const token = info.req.url.split('token=')[1]
+	const result = await validateToken(token, false)
+
+	if (!result.valid) {
+		return callback(false, 401)
 	}
-	return callback(false, 401)
+
+	return callback(true)
 }
 
 export function wsInit(server) {

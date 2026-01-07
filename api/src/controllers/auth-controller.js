@@ -1,7 +1,8 @@
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 
 import { getUserByEmail } from '../repositories/user-repository.js'
+import { generateToken } from '../utils/auth-service.js'
+import { addToBlacklist } from '../utils/blacklist.js'
 
 export async function doLogin(req, res) {
 	const { email, password } = req.body
@@ -16,9 +17,7 @@ export async function doLogin(req, res) {
 		return res.sendStatus(401)
 	}
 
-	const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-		expiresIn: parseInt(process.env.JWT_EXPIRES),
-	})
+	const token = await generateToken(user.id)
 
 	return res.json({
 		id: user.id,
@@ -26,17 +25,10 @@ export async function doLogin(req, res) {
 	})
 }
 
-const blacklist = {}
-
 export async function doLogout(req, res) {
 	const token = req.headers['authorization']
 
-	blacklist[token] = true
-	setTimeout(() => (blacklist[token] = undefined), parseInt(process.env.JWT_EXPIRES) * 1000)
+	addToBlacklist(token)
 
 	res.sendStatus(200)
-}
-
-export async function isBlackList(token) {
-	return blacklist[token]
 }
