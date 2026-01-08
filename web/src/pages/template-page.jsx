@@ -1,5 +1,6 @@
 import { Footer } from '../components/footer'
 import { Sidebar } from '../components/menu/sidebar'
+import { Toast } from '../components/toast'
 
 export function TemplatePage({ children }) {
 	return (
@@ -9,6 +10,7 @@ export function TemplatePage({ children }) {
 				{children}
 				<Footer />
 			</main>
+			<Toast />
 		</>
 	)
 }

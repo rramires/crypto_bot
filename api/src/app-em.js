@@ -30,7 +30,7 @@ export async function emInit(userId, wssInstance) {
 	WSS = wssInstance
 
 	// Test broadcast messages with Postman. Connect to ws://localhost:3000?token=valid-JWT-token
-	//setInterval(() => WSS.broadcast({ message: new Date() }), 3000)
+	//setInterval(() => WSS.broadcast({ notification: { type: 'success', text: new Date() } }), 3000)
 
 	// Market monitoring
 	startTickerMonitor()
