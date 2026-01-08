@@ -26,6 +26,23 @@ function startTickerMonitor() {
 	logger('M-TICKER', 'Ticker Monitor has started!')
 }
 
+function userDataMonitor(userId) {
+	try {
+		// TODO: Load wallet balance
+
+		// TODO: Configure user data stream
+
+		logger(`U-${userId}`, 'User Data Monitor has started!')
+	} catch (error) {
+		logger(
+			`U-${userId}`,
+			`User Data Monitor has NOT started!\n ${error.response ? JSON.stringify(error.response.data) : error.message}`,
+		)
+	}
+
+	logger('M-TICKER', 'Ticker Monitor has started!')
+}
+
 export async function emInit(userId, wssInstance) {
 	WSS = wssInstance
 
@@ -35,9 +52,12 @@ export async function emInit(userId, wssInstance) {
 	// Market monitoring
 	startTickerMonitor()
 
-	// TODO: user account monitoring
+	/// User data monitoring
+	userDataMonitor(userId)
 
-	// TODO: asset monitoring (candles)
+	// TODO: Load last executed orders
+
+	// TODO: Assets monitoring (candles)
 
 	logger('system', 'Exchange Monitor has started!')
 }
