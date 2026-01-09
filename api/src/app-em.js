@@ -13,6 +13,9 @@ function startTickerMonitor() {
 			const results = await Promise.all(
 				markets.map((mkt) => brain.updateMemory(mkt.symbol, 'TICKER', null, mkt)),
 			)
+			if (!results) {
+				return
+			}
 
 			const validResults = results.filter(Boolean)
 			validResults.forEach((res) => {
@@ -26,21 +29,62 @@ function startTickerMonitor() {
 	logger('M-TICKER', 'Ticker Monitor has started!')
 }
 
+async function loadWallet(userId, executeAutomations = true) {
+	try {
+		const exchange = new Exchange()
+		const brain = Brain.getInstance()
+
+		const info = await exchange.balance()
+
+		const results = await Promise.all(
+			Object.keys(info).map((item) =>
+				brain.updateMemory(
+					item,
+					`WALLET_${userId}`,
+					null,
+					info[item].available,
+					executeAutomations,
+				),
+			),
+		)
+		if (results) {
+			const validResults = results.filter(Boolean)
+			if (validResults.length > 0) {
+				validResults.forEach((res) => {
+					WSS.broadcast({ notification: res })
+				})
+			}
+			// for test
+			// console.log('Saldo BTC:', await brain.getMemory('BTC', 'WALLET_1'))
+		}
+
+		const wallet = Object.keys(info).map((item) => {
+			return { symbol: item, available: info[item].available, onOrder: info[item].onOrder }
+		})
+		// for test
+		// console.log('wallet', wallet)
+		return wallet
+	} catch (err) {
+		logger(
+			`U-${userId}`,
+			`Wallet has NOT loaded!\n ${err.body ? JSON.stringify(err.body) : err.message}`,
+		)
+	}
+}
+
 function userDataMonitor(userId) {
 	try {
-		// TODO: Load wallet balance
+		loadWallet(userId, false)
 
 		// TODO: Configure user data stream
 
 		logger(`U-${userId}`, 'User Data Monitor has started!')
-	} catch (error) {
+	} catch (err) {
 		logger(
 			`U-${userId}`,
-			`User Data Monitor has NOT started!\n ${error.response ? JSON.stringify(error.response.data) : error.message}`,
+			`User Data Monitor has NOT started!\n ${err.body ? JSON.stringify(err.body) : err.message}`,
 		)
 	}
-
-	logger('M-TICKER', 'Ticker Monitor has started!')
 }
 
 export async function emInit(userId, wssInstance) {
