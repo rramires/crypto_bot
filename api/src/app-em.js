@@ -3,6 +3,7 @@ import { Exchange } from './utils/exchange.js'
 import { logger } from './utils/logger.js'
 
 let WSS
+const LOGS = process.env.APP_EM_LOGS === 'true'
 
 function startTickerMonitor(userId) {
 	const exchange = new Exchange(userId)
@@ -37,15 +38,22 @@ async function loadWallet(userId, executeAutomations = true) {
 		const info = await exchange.balance()
 
 		const results = await Promise.all(
-			Object.keys(info).map((item) =>
+			Object.keys(info).map(async (item) => {
+				if (executeAutomations) {
+					// skip if the values are identical
+					const memory = await brain.getMemory(item, `WALLET_${userId}`)
+					if (memory === info[item].available) {
+						return
+					}
+				}
 				brain.updateMemory(
 					item,
 					`WALLET_${userId}`,
 					null,
 					info[item].available,
 					executeAutomations,
-				),
-			),
+				)
+			}),
 		)
 		if (results) {
 			const validResults = results.filter(Boolean)
@@ -72,11 +80,15 @@ async function loadWallet(userId, executeAutomations = true) {
 	}
 }
 
-function proccessBalanceData(userId, data) {
-	// TODO: Implement this
+async function proccessBalanceData(userId, data) {
+	if (LOGS) {
+		logger(`U-${this.userId}->proccessBalanceData:`, `${JSON.stringify(data)}`)
+		// reload wallet with automations
+		loadWallet(userId, true)
+	}
 }
 
-function proccessExecutionData(userId, data) {
+async function proccessExecutionData(userId, data) {
 	// TODO: Implement this
 }
 
