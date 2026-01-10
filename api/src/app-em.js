@@ -82,14 +82,46 @@ async function loadWallet(userId, executeAutomations = true) {
 
 async function proccessBalanceData(userId, data) {
 	if (LOGS) {
-		logger(`U-${this.userId}->proccessBalanceData:`, `${JSON.stringify(data)}`)
-		// reload wallet with automations
-		loadWallet(userId, true)
+		logger(`U-${userId}->proccessBalanceData:`, `${JSON.stringify(data)}`)
 	}
+	// reload wallet with automations
+	loadWallet(userId, true)
 }
 
 async function proccessExecutionData(userId, data) {
-	// TODO: Implement this
+	// Docs:
+	// https://github.com/binance/binance-spot-api-docs/blob/master/user-data-stream.md#order-update
+
+	// skip NEW orders
+	if (data.x === 'NEW') {
+		return
+	}
+
+	if (LOGS) {
+		logger(`U-${userId}->proccessExecutionData:`, `${JSON.stringify(data)}`)
+	}
+
+	const order = {
+		symbol: data.s, // Symbol
+		orderId: data.i, // Order ID
+		side: data.S, // Side BUY, SELL
+		type: data.o, // Order type LIMIT, MARKET
+		status: data.X, // Current order status
+		transactTime: data.T, // Transaction time
+	}
+
+	// Only the fully executed order matters.
+	if (order.status === 'FILLED') {
+		const quoteAmount = parseFloat(data.Z) // Cumulative quote asset transacted quantity
+		order.avgPrice = quoteAmount / parseFloat(data.z) // Cumulative filled quantity
+		order.commission = data.n // Commission amount
+		order.quatity = data.q // Order quantity
+		const isQuoteCommission = data.N && order.symbol.endsWith(data.N) // Commission asset
+		order.net = isQuoteCommission ? quoteAmount - parseFloat(order.commission) : quoteAmount // net value
+	} else if (order.status === 'REJECTED') {
+		order.obs = data.r // Order reject reason
+	}
+	// TODO: Implement order update
 }
 
 function userDataMonitor(userId) {
