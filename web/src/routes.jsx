@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { Automations } from './pages/automations/automations'
+import { Brain } from './pages/brain/brain'
 import { Dashboard } from './pages/dashboard/dashboard'
 import { Login } from './pages/login'
 import { Monitors } from './pages/monitors/monitors'
@@ -23,6 +24,14 @@ export function Router() {
 					element={
 						<PrivateRoute>
 							<Dashboard />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='/brain'
+					element={
+						<PrivateRoute>
+							<Brain />
 						</PrivateRoute>
 					}
 				/>

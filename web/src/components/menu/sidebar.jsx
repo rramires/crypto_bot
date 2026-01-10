@@ -51,8 +51,8 @@ export function Sidebar() {
 						icon={
 							<img
 								src='/img/favicon/favicon-32x32.png'
-								height='32'
-								width='32'
+								height='24'
+								width='24'
 								alt='Cryptobot Logo'
 							/>
 						}

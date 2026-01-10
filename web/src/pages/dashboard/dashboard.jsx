@@ -1,4 +1,5 @@
 import { Wallet } from '../../components/wallet/wallet'
+import { BrainButton } from '../brain/brain-button'
 import { NewOrderButton } from '../orders/new-order-button'
 import { TemplatePage } from '../template-page'
 import { CandleChart } from './candle-chart'
@@ -16,6 +17,7 @@ export function Dashboard() {
 				</div>
 				<div className='btn-btn-toolbar mt-3'>
 					<NewOrderButton />
+					<BrainButton />
 				</div>
 			</div>
 			<CandleChart />
