@@ -1,18 +1,29 @@
 import { Brain } from './brain.js'
+import { getSymbols } from './repositories/symbols-repository.js'
 import { Exchange } from './utils/exchange.js'
 import { logger } from './utils/logger.js'
 
 let WSS
 const LOGS = process.env.APP_EM_LOGS === 'true'
 
-function startTickerMonitor(userId) {
+async function startTickerMonitor(userId) {
+	const symbolsMap = {}
+	const symbolsArray = await getSymbols()
+	symbolsArray.map((symbolObj) => (symbolsMap[symbolObj.symbol] = true))
+
 	const exchange = new Exchange(userId)
 	exchange.tickerStream(async (markets) => {
 		try {
 			const brain = Brain.getInstance()
 
 			const results = await Promise.all(
-				markets.map((mkt) => brain.updateMemory(mkt.symbol, 'TICKER', null, mkt)),
+				markets.map(async (mkt) => {
+					// skip if not found in database symbols
+					if (!symbolsMap[mkt.symbol]) {
+						return false
+					}
+					return await brain.updateMemory(mkt.symbol, 'TICKER', null, mkt)
+				}),
 			)
 			if (!results) {
 				return
@@ -46,7 +57,7 @@ async function loadWallet(userId, executeAutomations = true) {
 						return
 					}
 				}
-				brain.updateMemory(
+				return await brain.updateMemory(
 					item,
 					`WALLET_${userId}`,
 					null,
@@ -85,7 +96,7 @@ async function proccessBalanceData(userId, data) {
 		logger(`U-${userId}->proccessBalanceData:`, `${JSON.stringify(data)}`)
 	}
 	// reload wallet with automations
-	loadWallet(userId, true)
+	await loadWallet(userId, true)
 }
 
 async function proccessExecutionData(userId, data) {
@@ -115,7 +126,7 @@ async function proccessExecutionData(userId, data) {
 		const quoteAmount = parseFloat(data.Z) // Cumulative quote asset transacted quantity
 		order.avgPrice = quoteAmount / parseFloat(data.z) // Cumulative filled quantity
 		order.commission = data.n // Commission amount
-		order.quatity = data.q // Order quantity
+		order.quantity = data.q // Order quantity
 		const isQuoteCommission = data.N && order.symbol.endsWith(data.N) // Commission asset
 		order.net = isQuoteCommission ? quoteAmount - parseFloat(order.commission) : quoteAmount // net value
 	} else if (order.status === 'REJECTED') {
@@ -124,9 +135,9 @@ async function proccessExecutionData(userId, data) {
 	// TODO: Implement order update
 }
 
-function userDataMonitor(userId) {
+async function userDataMonitor(userId) {
 	try {
-		loadWallet(userId, false)
+		await loadWallet(userId, false)
 
 		const exchange = new Exchange(userId)
 		exchange.userDataStream(
@@ -153,7 +164,7 @@ export async function emInit(userId, wssInstance) {
 	startTickerMonitor(userId)
 
 	/// User data monitoring
-	userDataMonitor(userId)
+	await userDataMonitor(userId)
 
 	// TODO: Load last executed orders
 

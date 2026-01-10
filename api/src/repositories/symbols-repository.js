@@ -7,3 +7,7 @@ export function deleteAllSymbols() {
 export function bulkInsertSymbols(symbols) {
 	return symbolsModel.bulkCreate(symbols)
 }
+
+export function getSymbols() {
+	return symbolsModel.findAll()
+}

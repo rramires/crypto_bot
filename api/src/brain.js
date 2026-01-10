@@ -3,6 +3,48 @@ import { logger } from './utils/logger.js'
 
 const LOGS = process.env.BRAIN_LOGS === 'true'
 
+// Ticker Fields Docs
+// https://github.com/ccxt/node-binance-api?tab=readme-ov-file#get-24hr-price-change-statistics-via-websocket
+
+/* 
+Hardcoded alternative for performance without loops in updateTickerMemory: 
+ticker.priceChange = parseFloat(ticker.priceChange)
+ticker.percentChange = parseFloat(ticker.percentChange)
+ticker.averagePrice = parseFloat(ticker.averagePrice)
+ticker.prevClose = parseFloat(ticker.prevClose)
+ticker.close = parseFloat(ticker.close)
+ticker.closeQty = parseFloat(ticker.closeQty)
+ticker.bestBid = parseFloat(ticker.bestBid)
+ticker.bestBidQty = parseFloat(ticker.bestBidQty)
+ticker.bestAsk = parseFloat(ticker.bestAsk)
+ticker.bestAskQty = parseFloat(ticker.bestAskQty)
+ticker.open = parseFloat(ticker.open)
+ticker.high = parseFloat(ticker.high)
+ticker.low = parseFloat(ticker.low)
+ticker.volume = parseFloat(ticker.volume)
+ticker.quoteVolume = parseFloat(ticker.quoteVolume)
+
+delete ticker.eventTime
+delete ticker.eventType
+delete ticker.lastTradeId
+delete ticker.firstTradeId
+delete ticker.numTrades
+delete ticker.closeTime
+delete ticker.openTime
+delete ticker.symbol 
+*/
+
+const UNUSED_TICKER_FIELDS = [
+	'eventTime',
+	'eventType',
+	'lastTradeId',
+	'firstTradeId',
+	'numTrades',
+	'closeTime',
+	'openTime',
+	'symbol',
+]
+
 const TICKER_FIELDS = [
 	'priceChange',
 	'percentChange',
@@ -144,6 +186,8 @@ export class Brain {
 		if (execAutomations) {
 			// TODO: Add automations checks
 		}
+
+		return { memoryKey, value }
 	}
 
 	async getMemory(symbolOrKey, index = undefined, interval = undefined) {
@@ -162,6 +206,10 @@ export class Brain {
 	}
 
 	async updateTickerMemory(symbol, index, ticker, execAutomations = true) {
+		for (const key of UNUSED_TICKER_FIELDS) {
+			delete ticker[key]
+		}
+
 		for (const key of TICKER_FIELDS) {
 			ticker[key] = parseFloat(ticker[key])
 		}
