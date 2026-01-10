@@ -4,8 +4,8 @@ import { logger } from './utils/logger.js'
 
 let WSS
 
-function startTickerMonitor() {
-	const exchange = new Exchange()
+function startTickerMonitor(userId) {
+	const exchange = new Exchange(userId)
 	exchange.tickerStream(async (markets) => {
 		try {
 			const brain = Brain.getInstance()
@@ -31,7 +31,7 @@ function startTickerMonitor() {
 
 async function loadWallet(userId, executeAutomations = true) {
 	try {
-		const exchange = new Exchange()
+		const exchange = new Exchange(userId)
 		const brain = Brain.getInstance()
 
 		const info = await exchange.balance()
@@ -72,11 +72,23 @@ async function loadWallet(userId, executeAutomations = true) {
 	}
 }
 
+function proccessBalanceData(userId, data) {
+	// TODO: Implement this
+}
+
+function proccessExecutionData(userId, data) {
+	// TODO: Implement this
+}
+
 function userDataMonitor(userId) {
 	try {
 		loadWallet(userId, false)
 
-		// TODO: Configure user data stream
+		const exchange = new Exchange(userId)
+		exchange.userDataStream(
+			(data) => proccessBalanceData(userId, data),
+			(data) => proccessExecutionData(userId, data),
+		)
 
 		logger(`U-${userId}`, 'User Data Monitor has started!')
 	} catch (err) {
@@ -94,7 +106,7 @@ export async function emInit(userId, wssInstance) {
 	//setInterval(() => WSS.broadcast({ notification: { type: 'success', text: new Date() } }), 3000)
 
 	// Market monitoring
-	startTickerMonitor()
+	startTickerMonitor(userId)
 
 	/// User data monitoring
 	userDataMonitor(userId)
