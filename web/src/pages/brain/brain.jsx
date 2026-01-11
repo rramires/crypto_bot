@@ -1,17 +1,30 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { getBrain, getMemory } from '../../services/brain-service'
 import { FormPage } from '../form-page'
+import { BrainTab } from './brain-tab'
+import { BrainTest } from './brain-test'
 
 export function Brain() {
+	const [brain, setBrain] = useState({})
+	const [memory, setMemory] = useState({})
+
 	useEffect(() => {
 		getBrain()
-			.then((brain) => console.log(brain))
-			.catch((err) => console.error(err))
+			.then((brain) => setBrain(brain))
+			.catch((err) =>
+				setBrain({
+					error: err.response ? err.response.data : err.message,
+				}),
+			)
 
 		getMemory()
-			.then((memory) => console.log(memory))
-			.catch((err) => console.error(err))
+			.then((memory) => setMemory(memory))
+			.catch((err) =>
+				setMemory({
+					error: err.response ? err.response.data : err.message,
+				}),
+			)
 	}, [])
 
 	return (
@@ -60,13 +73,13 @@ export function Brain() {
 					id='memory'
 					role='tabpanel'
 				>
-					<h1>Memory</h1>
+					<BrainTab id='memory' data={memory} hasSearch={true} />
 				</div>
 				<div className='tab-pane fade' id='brain' role='tabpanel'>
-					<h1>Brain</h1>
+					<BrainTab id='brain' data={brain} />
 				</div>
 				<div className='tab-pane fade' id='tests' role='tabpanel'>
-					<h1>Tests</h1>
+					<BrainTest id='test' data={memory} />
 				</div>
 			</div>
 		</FormPage>
