@@ -7,6 +7,7 @@ import { doLogin, doLogout } from './controllers/auth-controller.js'
 import { getBalance } from './controllers/exchange-controller.js'
 import { authMiddleware } from './middlewares/auth-middleware.js'
 import { errorMiddleware } from './middlewares/error-middelware.js'
+import { brainRouter } from './routers/brain-router.js'
 
 export const app = express()
 
@@ -26,6 +27,7 @@ app.post('/logout', doLogout)
 
 // private routes
 app.use('/exchange/balance', authMiddleware, getBalance)
+app.use('/brain', authMiddleware, brainRouter)
 
 // error
 app.use(errorMiddleware)

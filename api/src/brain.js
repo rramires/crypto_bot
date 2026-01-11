@@ -94,7 +94,12 @@ export class Brain {
 		// Init memory
 		this.cache = new Cache()
 
-		// TODO: Init the brain
+		this.BRAIN = {}
+		// TODO: Init the brain with automations
+	}
+
+	async getBrain() {
+		return { ...this.BRAIN }
 	}
 
 	async getFiatConversion(stablecoin, fiatCoin, fiatQty) {

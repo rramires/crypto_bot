@@ -61,7 +61,7 @@ async function loadWallet(userId, executeAutomations = true) {
 					item,
 					`WALLET_${userId}`,
 					null,
-					info[item].available,
+					parseFloat(info[item].available),
 					executeAutomations,
 				)
 			}),
