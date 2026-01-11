@@ -1,6 +1,19 @@
+import { useEffect } from 'react'
+
+import { getBrain, getMemory } from '../../services/brain-service'
 import { FormPage } from '../form-page'
 
 export function Brain() {
+	useEffect(() => {
+		getBrain()
+			.then((brain) => console.log(brain))
+			.catch((err) => console.error(err))
+
+		getMemory()
+			.then((memory) => console.log(memory))
+			.catch((err) => console.error(err))
+	}, [])
+
 	return (
 		<FormPage title='Brain Inspection'>
 			<ul className='nav nav-tabs' id='tabs' role='tablist'>
