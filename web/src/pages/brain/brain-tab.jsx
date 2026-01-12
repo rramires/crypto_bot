@@ -32,6 +32,28 @@ export function BrainTab({ id, data, hasSearch = false }) {
 		setSearch(event.target.value.toUpperCase())
 	}
 
+	function renderValue(obj) {
+		const isTicker = obj.key.includes(':TICKER')
+		const hasPreviousCurrent = obj.value?.previous && obj.value?.current
+
+		if (isTicker && hasPreviousCurrent) {
+			return (
+				<div style={{ display: 'flex', gap: '20px' }}>
+					<div style={{ flex: 1 }}>
+						<strong>Previous:</strong>
+						<pre>{JSON.stringify(obj.value.previous, null, 4)}</pre>
+					</div>
+					<div style={{ flex: 1 }}>
+						<strong>Current:</strong>
+						<pre>{JSON.stringify(obj.value.current, null, 4)}</pre>
+					</div>
+				</div>
+			)
+		}
+
+		return <pre>{JSON.stringify(obj.value, null, 4)}</pre>
+	}
+
 	return (
 		<>
 			{hasSearch && (
@@ -59,14 +81,16 @@ export function BrainTab({ id, data, hasSearch = false }) {
 						</tr>
 					</thead>
 					<tbody>
-						{dataArr.map((obj) => (
-							<tr key={id + obj.key}>
+						{dataArr.map((obj, index) => (
+							<tr
+								key={id + obj.key}
+								style={{
+									backgroundColor:
+										index % 2 === 0 ? '#F2F4F6' : '#FFF',
+								}}
+							>
 								<td>{obj.key}</td>
-								<td>
-									<pre>
-										{JSON.stringify(obj.value, null, 4)}
-									</pre>
-								</td>
+								<td>{renderValue(obj)}</td>
 							</tr>
 						))}
 					</tbody>
