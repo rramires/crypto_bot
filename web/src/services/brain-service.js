@@ -13,3 +13,9 @@ export async function getMemory() {
 	const response = await axios.get(url)
 	return response.data
 }
+
+export async function updateMemory(index, value) {
+	const url = `${API_URL}/brain/memory/${index}`
+	const response = await axios.patch(url, { data: value })
+	return response.data
+}

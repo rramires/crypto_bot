@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Select from 'react-select'
 
+import { updateMemory } from '../../services/brain-service.js'
 import { MemoryForm } from './memory-form'
 
 export function BrainTest({ data }) {
@@ -102,6 +103,21 @@ export function BrainTest({ data }) {
 		const processedValue = convertToFloatIfNecessary()
 
 		console.log(processedValue)
+
+		updateMemory(
+			index,
+			indexValue.current ? processedValue.current : processedValue,
+		)
+			.then((results) =>
+				alert('Memory updated:\n' + JSON.stringify(results)),
+			)
+			.catch((err) =>
+				alert(
+					err.response
+						? JSON.stringify(err.response.data)
+						: err.message,
+				),
+			)
 	}
 
 	return (
