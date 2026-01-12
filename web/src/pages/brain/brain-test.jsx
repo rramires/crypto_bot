@@ -26,9 +26,83 @@ export function BrainTest({ data }) {
 		setIndexValue(data[evt.value])
 	}
 
-	function onIndexValueChange(hasCurrent, evt) {}
+	function onIndexValueChange(hasCurrent, evt) {
+		const value = evt.target.value
 
-	function btnUpdateClick() {}
+		if (!hasCurrent) {
+			if (typeof indexValue === 'object') {
+				setIndexValue((prevState) => ({
+					...prevState,
+					[evt.target.id]: value,
+				}))
+			} else {
+				setIndexValue(value)
+			}
+		} else {
+			const currentValue = { ...indexValue.current }
+			currentValue[evt.target.id] = value
+
+			setIndexValue({
+				previous: indexValue.previous,
+				current: currentValue,
+			})
+		}
+	}
+
+	function convertToFloatIfNecessary() {
+		const isOriginalNumber = (originalVal) => {
+			return (
+				typeof originalVal === 'number' ||
+				(typeof originalVal === 'string' &&
+					(parseFloat(originalVal) || originalVal === '0'))
+			)
+		}
+
+		const parseValue = (val, originalVal) => {
+			if (val === '' || val === null || val === undefined) return val
+			if (isOriginalNumber(originalVal) && !isNaN(val)) {
+				return parseFloat(val)
+			}
+			return val
+		}
+
+		const originalData = data[index]
+		let processedValue
+
+		if (indexValue.current) {
+			const originalCurrent = originalData.current
+			processedValue = {
+				previous: indexValue.previous,
+				current:
+					typeof indexValue.current === 'object'
+						? Object.fromEntries(
+								Object.entries(indexValue.current).map(
+									([key, val]) => [
+										key,
+										parseValue(val, originalCurrent[key]),
+									],
+								),
+							)
+						: parseValue(indexValue.current, originalCurrent),
+			}
+		} else if (typeof indexValue === 'object') {
+			processedValue = Object.fromEntries(
+				Object.entries(indexValue).map(([key, val]) => [
+					key,
+					parseValue(val, originalData[key]),
+				]),
+			)
+		} else {
+			processedValue = parseValue(indexValue, originalData)
+		}
+		return processedValue
+	}
+
+	function btnUpdateClick() {
+		const processedValue = convertToFloatIfNecessary()
+
+		console.log(processedValue)
+	}
 
 	return (
 		<>
@@ -63,12 +137,13 @@ export function BrainTest({ data }) {
 					)}
 					{index && (
 						<div className='col-6'>
-							<h1 className='h6 mb-3'>Current Value:</h1>
+							<h1 className='h5 mb-3'>Current Value:</h1>
 							{indexValue.current ? (
 								<MemoryForm
 									id={index}
 									disabled={false}
 									data={indexValue.current}
+									originalData={data[index].current}
 									onChange={(evt) =>
 										onIndexValueChange(true, evt)
 									}
@@ -78,6 +153,7 @@ export function BrainTest({ data }) {
 									id={index}
 									disabled={false}
 									data={indexValue}
+									originalData={data[index]}
 									onChange={(evt) =>
 										onIndexValueChange(false, evt)
 									}

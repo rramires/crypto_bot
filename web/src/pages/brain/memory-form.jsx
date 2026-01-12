@@ -1,6 +1,17 @@
-export function MemoryForm({ id, data, disabled, onChange }) {
-	if (!data) {
+import { MemoryInput } from './memory-input'
+
+export function MemoryForm({ id, data, originalData, disabled, onChange }) {
+	if (data === null || data === undefined) {
 		return <></>
+	}
+
+	function getType(item) {
+		const typeSource = originalData !== undefined ? originalData : data
+		const value =
+			typeof typeSource === 'object' ? typeSource[item] : typeSource
+		return parseFloat(value) || value === 0 || value === '0'
+			? 'number'
+			: 'text'
 	}
 
 	return (
@@ -9,12 +20,23 @@ export function MemoryForm({ id, data, disabled, onChange }) {
 				Object.keys(data)
 					.sort()
 					.map((item) => (
-						<div>
-							{item}:{JSON.stringify(data[item])}
-						</div>
+						<MemoryInput
+							key={item}
+							id={item}
+							disabled={disabled}
+							type={getType(item)}
+							onChange={onChange}
+							data={data[item]}
+						/>
 					))
 			) : (
-				<div>{data}</div>
+				<MemoryInput
+					id={id}
+					disabled={disabled}
+					type={getType(id)}
+					onChange={onChange}
+					data={data}
+				/>
 			)}
 		</>
 	)
