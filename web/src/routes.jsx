@@ -5,6 +5,7 @@ import { Brain } from './pages/brain/brain'
 import { Dashboard } from './pages/dashboard/dashboard'
 import { Login } from './pages/login'
 import { Monitors } from './pages/monitors/monitors'
+import { NewOrder } from './pages/orders/new-order'
 import { Orders } from './pages/orders/orders'
 import { OrderTemplates } from './pages/ordertemplates/order-templates'
 import { Reports } from './pages/reports/reports'
@@ -40,6 +41,14 @@ export function Router() {
 					element={
 						<PrivateRoute>
 							<Reports />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='/orders/new'
+					element={
+						<PrivateRoute>
+							<NewOrder />
 						</PrivateRoute>
 					}
 				/>
