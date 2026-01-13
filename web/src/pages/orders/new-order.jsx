@@ -6,7 +6,9 @@ import { FormPage } from '../form-page'
 export function NewOrder() {
 	const [order, setOrder] = useState({})
 
-	function onSymbolChange() {}
+	function onSymbolChange(evt) {
+		setOrder((prevState) => ({ ...prevState, symbol: evt.target.value }))
+	}
 
 	return (
 		<FormPage title='New Spot Order'>
