@@ -8,6 +8,7 @@ import { getBalance } from './controllers/exchange-controller.js'
 import { authMiddleware } from './middlewares/auth-middleware.js'
 import { errorMiddleware } from './middlewares/error-middelware.js'
 import { brainRouter } from './routers/brain-router.js'
+import { symbolsRouter } from './routers/symbols-router.js'
 
 export const app = express()
 
@@ -28,6 +29,7 @@ app.post('/logout', doLogout)
 // private routes
 app.use('/exchange/balance', authMiddleware, getBalance)
 app.use('/brain', authMiddleware, brainRouter)
+app.use('/symbols', authMiddleware, symbolsRouter)
 
 // error
 app.use(errorMiddleware)

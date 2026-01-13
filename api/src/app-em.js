@@ -1,5 +1,5 @@
 import { Brain } from './brain.js'
-import { getSymbols } from './repositories/symbols-repository.js'
+import { getAllSymbols } from './repositories/symbols-repository.js'
 import { Exchange } from './utils/exchange.js'
 import { logger } from './utils/logger.js'
 
@@ -8,7 +8,7 @@ const LOGS = process.env.APP_EM_LOGS === 'true'
 
 async function startTickerMonitor(userId) {
 	const symbolsMap = {}
-	const symbolsArray = await getSymbols()
+	const symbolsArray = await getAllSymbols()
 	symbolsArray.map((symbolObj) => (symbolsMap[symbolObj.symbol] = true))
 
 	const exchange = new Exchange(userId)

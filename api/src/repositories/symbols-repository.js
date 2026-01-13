@@ -8,6 +8,6 @@ export function bulkInsertSymbols(symbols) {
 	return symbolsModel.bulkCreate(symbols)
 }
 
-export function getSymbols() {
+export function getAllSymbols() {
 	return symbolsModel.findAll()
 }

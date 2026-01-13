@@ -1,4 +1,8 @@
-import { bulkInsertSymbols, deleteAllSymbols } from '../repositories/symbols-repository.js'
+import {
+	bulkInsertSymbols,
+	deleteAllSymbols,
+	getAllSymbols,
+} from '../repositories/symbols-repository.js'
 import { Exchange } from '../utils/exchange.js'
 
 export async function syncSymbols() {
@@ -59,4 +63,9 @@ export async function syncSymbols() {
 	await deleteAllSymbols()
 
 	await bulkInsertSymbols(symbols)
+}
+
+export async function getSymbols(req, res) {
+	const symbols = await getAllSymbols()
+	res.json(symbols)
 }
