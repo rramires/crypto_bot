@@ -2,6 +2,7 @@ import {
 	bulkInsertSymbols,
 	deleteAllSymbols,
 	getAllSymbols,
+	getOneSymbol,
 } from '../repositories/symbols-repository.js'
 import { Exchange } from '../utils/exchange.js'
 
@@ -68,4 +69,10 @@ export async function syncSymbols() {
 export async function getSymbols(req, res) {
 	const symbols = await getAllSymbols()
 	res.json(symbols)
+}
+
+export async function getSymbol(req, res) {
+	const symbol = req.params.symbol
+	const symbolObject = await getOneSymbol(symbol)
+	res.json(symbolObject)
 }

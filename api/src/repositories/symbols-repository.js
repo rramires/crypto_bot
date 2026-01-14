@@ -1,3 +1,5 @@
+import { where } from 'sequelize'
+
 import { symbolsModel } from '../models/symbols-model.js'
 
 export function deleteAllSymbols() {
@@ -10,4 +12,10 @@ export function bulkInsertSymbols(symbols) {
 
 export function getAllSymbols() {
 	return symbolsModel.findAll()
+}
+
+export function getOneSymbol(symbol) {
+	return symbolsModel.findOne({
+		where: { symbol },
+	})
 }
