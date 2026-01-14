@@ -1,15 +1,23 @@
 import { useState } from 'react'
 
+import { SelectSide } from '../../components/select-side'
 import { SelectSymbol } from '../../components/select-symbol'
 import { SymbolInfo } from '../../components/symbol-info'
 import { WalletSummary } from '../../components/wallet-summary'
 import { FormPage } from '../form-page'
 
 export function NewOrder() {
-	const [order, setOrder] = useState({})
+	const [order, setOrder] = useState({ side: 'BUY' })
 
 	function onSymbolChange(evt) {
 		setOrder((prevState) => ({ ...prevState, symbol: evt.target.value }))
+	}
+
+	function onInputChange(evt) {
+		setOrder((prevState) => ({
+			...prevState,
+			[evt.target.id]: evt.target.value,
+		}))
 	}
 
 	return (
@@ -34,6 +42,12 @@ export function NewOrder() {
 				<div className='col-6'>
 					<WalletSummary symbol={order.symbol} />
 				</div>
+			</div>
+			<div className='row mb-3'>
+				<div className='col-3'>
+					<SelectSide side={order.side} onChange={onInputChange} />
+				</div>
+				<div className='col-3'>{JSON.stringify(order)}</div>
 			</div>
 		</FormPage>
 	)
