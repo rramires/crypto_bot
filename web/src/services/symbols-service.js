@@ -9,3 +9,11 @@ export async function getAllSymbols() {
 
 	return response.data
 }
+
+export async function getSymbol(symbol) {
+	const url = `${API_URL}/symbols/${symbol}`
+
+	const response = await axios.get(url)
+
+	return response.data
+}

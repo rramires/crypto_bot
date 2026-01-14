@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
+
+import { getSymbol } from '../services/symbols-service'
 
 export function SymbolInfo({ symbol }) {
 	const [info, setInfo] = useState({
@@ -8,6 +10,23 @@ export function SymbolInfo({ symbol }) {
 		minNotional: 10,
 		minLotSize: 10,
 	})
+
+	useEffect(() => {
+		if (!symbol) {
+			return
+		}
+		getSymbol(symbol)
+			.then((symbolObj) =>
+				setInfo((prevState) => ({
+					...prevState,
+					minLotSize: symbolObj.minLotSize,
+					minNotional: symbolObj.minNotional,
+				})),
+			)
+			.catch((err) =>
+				console.error(err.response ? err.response.data : err.message),
+			)
+	}, [symbol])
 
 	function getWebStreamUrl() {
 		if (!symbol) {
