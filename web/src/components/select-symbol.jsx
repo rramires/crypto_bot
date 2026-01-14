@@ -23,7 +23,7 @@ export function SelectSymbol({ symbol, disabled, onChange }) {
 	const customStyles = {
 		control: (provided) => ({
 			...provided,
-			width: 220,
+			width: 240,
 		}),
 	}
 
@@ -33,6 +33,7 @@ export function SelectSymbol({ symbol, disabled, onChange }) {
 
 	return (
 		<Select
+			className='small'
 			value={{ value: symbol, label: symbol }}
 			isDisabled={disabled}
 			styles={customStyles}

@@ -12,7 +12,7 @@ export function BrainTest({ data }) {
 	const customStyles = {
 		control: (provided) => ({
 			...provided,
-			width: 300,
+			width: 240,
 		}),
 	}
 
@@ -125,6 +125,7 @@ export function BrainTest({ data }) {
 			<div className='row mb-3 pt-3'>
 				<div className='col-4'>
 					<Select
+						className='small'
 						value={select}
 						styles={customStyles}
 						options={options}

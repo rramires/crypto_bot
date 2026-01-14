@@ -7,8 +7,8 @@ export function SymbolInfo({ symbol }) {
 	const [info, setInfo] = useState({
 		yesterday: 0,
 		now: 0,
-		minNotional: 10,
-		minLotSize: 10,
+		minNotional: 0,
+		minLotSize: 0,
 	})
 
 	useEffect(() => {
@@ -53,10 +53,10 @@ export function SymbolInfo({ symbol }) {
 	})
 
 	return (
-		<div className='row'>
-			<div className='col-6'>
+		<div className='row gx-4 flex-nowrap w-auto'>
+			<div className='col-auto'>
 				<div className='form-group'>
-					<label className='small'>Market Price:</label>
+					<label className='small mb-2'>Market Price:</label>
 					<div className='d-flex gap-2 small flex-nowrap align-items-center'>
 						<span className='flex-shrink-0'>Yest:</span>
 						<span className='ms-auto text-end font-monospace'>
@@ -71,9 +71,9 @@ export function SymbolInfo({ symbol }) {
 					</div>
 				</div>
 			</div>
-			<div className='col-6'>
+			<div className='col-auto'>
 				<div className='form-group'>
-					<label className='small'>Min. Limits:</label>
+					<label className='small mb-2'>Min. Limits:</label>
 					<div className='d-flex gap-2 small flex-nowrap align-items-center'>
 						<span className='flex-shrink-0 flex-grow-1 text-nowrap'>
 							Min. Notional:
