@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import useWebSocket from 'react-use-websocket'
 
 export function SymbolInfo({ symbol }) {
 	const [info, setInfo] = useState({
@@ -6,6 +7,30 @@ export function SymbolInfo({ symbol }) {
 		now: 0,
 		minNotional: 10,
 		minLotSize: 10,
+	})
+
+	function getWebStreamUrl() {
+		if (!symbol) {
+			return ''
+		}
+		return `${import.meta.env.VITE_BWS_URL}/ws/${symbol.toLowerCase()}@ticker`
+	}
+
+	const { lastJsonMessage } = useWebSocket(getWebStreamUrl(), {
+		onOpen: () =>
+			console.log(`Connected to Binance Stream: ${symbol}@ticker`),
+		onMessage: () => {
+			if (lastJsonMessage) {
+				setInfo((prevState) => ({
+					...prevState,
+					yesterday: lastJsonMessage.o,
+					now: lastJsonMessage.c,
+				}))
+			}
+		},
+		onError: (err) => console.error(err),
+		shouldReconnect: () => true,
+		reconnectInterval: 10000,
 	})
 
 	return (
