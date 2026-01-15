@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { OrderType } from '../../components/order-type'
+import { QuantityInput } from '../../components/quantity-input'
 import { SelectSide } from '../../components/select-side'
 import { SelectSymbol } from '../../components/select-symbol'
 import { SymbolInfo } from '../../components/symbol-info'
@@ -9,7 +10,13 @@ import { LIMIT_TYPES, STOP_TYPES } from '../../services/exchange-service'
 import { FormPage } from '../form-page'
 
 export function NewOrder() {
-	const [order, setOrder] = useState({ side: 'BUY', type: 'MARKET' })
+	const [order, setOrder] = useState({
+		side: 'BUY',
+		type: 'MARKET',
+		isQuote: false,
+		quantity: 0,
+	})
+	const [error, setError] = useState('')
 
 	function getStopPriceClasses(orderType) {
 		return STOP_TYPES.includes(orderType) ? 'col-3' : 'd-none'
@@ -28,6 +35,11 @@ export function NewOrder() {
 			...prevState,
 			[evt.target.id]: evt.target.value,
 		}))
+	}
+
+	function btnSendClick() {
+		setError('')
+		console.log(order)
 	}
 
 	return (
@@ -110,21 +122,36 @@ export function NewOrder() {
 					</div>
 				</div>
 				<div className='col-3'>
-					{/* FIXME: Replace for other special field */}
 					<div className='form-group'>
-						<label className='small' htmlFor='qty'>
-							Qty:
-						</label>
-						<input
-							className='form-control'
-							id='qty'
-							type='number'
-							placeholder='0'
-							value={order.qty || ''}
+						<QuantityInput
+							symbol={order.symbol}
+							quantity={order.quantity}
+							isQuote={order.isQuote}
+							allowQuote={order.type === 'MARKET'}
 							onChange={onInputChange}
 						/>
 					</div>
 				</div>
+			</div>
+			<div className='row'>
+				<div className='col-3'>
+					<button
+						type='button'
+						className='btn btn-primary'
+						onClick={btnSendClick}
+						disabled={order.quantity === 0}
+					>
+						Send Order
+					</button>
+					<a href='/orders/new' className=' btn btn-light'>
+						Cancel
+					</a>
+				</div>
+				{error && (
+					<div className='alert alert-danger mt-1 col-3 py-1'>
+						{error}
+					</div>
+				)}
 			</div>
 			<pre>{JSON.stringify(order, null, 4)}</pre>
 		</FormPage>
