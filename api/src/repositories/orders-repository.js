@@ -42,7 +42,7 @@ export function insertOrder(newOrder) {
 	return orderModel.create(newOrder)
 }
 
-export function getOrders(userId, page = 1) {
+export function getOrdersByUserId(userId, page = 1) {
 	const options = {
 		where: { userId },
 		order: [['id', 'DESC']],
