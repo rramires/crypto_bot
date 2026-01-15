@@ -1,7 +1,9 @@
 export function SelectSide({ side, onChange }) {
 	return (
 		<div className='form-group'>
-			<label htmlFor='side'>Side:</label>
+			<label className='small' htmlFor='side'>
+				Side:
+			</label>
 			<select
 				id='side'
 				className='form-select'

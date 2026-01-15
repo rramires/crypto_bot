@@ -1,13 +1,23 @@
 import { useState } from 'react'
 
+import { OrderType } from '../../components/order-type'
 import { SelectSide } from '../../components/select-side'
 import { SelectSymbol } from '../../components/select-symbol'
 import { SymbolInfo } from '../../components/symbol-info'
 import { WalletSummary } from '../../components/wallet-summary'
+import { LIMIT_TYPES, STOP_TYPES } from '../../services/exchange-service'
 import { FormPage } from '../form-page'
 
 export function NewOrder() {
-	const [order, setOrder] = useState({ side: 'BUY' })
+	const [order, setOrder] = useState({ side: 'BUY', type: 'MARKET' })
+
+	function getStopPriceClasses(orderType) {
+		return STOP_TYPES.includes(orderType) ? 'col-3' : 'd-none'
+	}
+
+	function getLimitPriceClasses(orderType) {
+		return LIMIT_TYPES.includes(orderType) ? 'col-3' : 'd-none'
+	}
 
 	function onSymbolChange(evt) {
 		setOrder((prevState) => ({ ...prevState, symbol: evt.target.value }))
@@ -47,8 +57,76 @@ export function NewOrder() {
 				<div className='col-3'>
 					<SelectSide side={order.side} onChange={onInputChange} />
 				</div>
-				<div className='col-3'>{JSON.stringify(order)}</div>
+				<div className='col-3'>
+					<OrderType type={order.type} onChange={onInputChange} />
+				</div>
 			</div>
+			<div className='row mb-3'>
+				<div className={getStopPriceClasses(order.type)}>
+					<div className='form-group'>
+						<label className='small' htmlFor='stopPrice'>
+							Stop Price:
+						</label>
+						<input
+							className='form-control'
+							id='stopPrice'
+							type='number'
+							placeholder='0'
+							value={order.stopPrice || ''}
+							onChange={onInputChange}
+						/>
+					</div>
+				</div>
+				<div className={getStopPriceClasses(order.type)}>
+					<div className='form-group'>
+						<label className='small' htmlFor='trailingDelta'>
+							Trailing Delta:
+						</label>
+						<input
+							className='form-control'
+							id='trailingDelta'
+							type='trailingDelta'
+							placeholder='0'
+							value={order.trailingDelta || ''}
+							onChange={onInputChange}
+						/>
+					</div>
+				</div>
+			</div>
+			<div className='row mb-3'>
+				<div className={getLimitPriceClasses(order.type)}>
+					<div className='form-group'>
+						<label className='small' htmlFor='limitPrice'>
+							Limit Price:
+						</label>
+						<input
+							className='form-control'
+							id='limitPrice'
+							type='number'
+							placeholder='0'
+							value={order.limitPrice || ''}
+							onChange={onInputChange}
+						/>
+					</div>
+				</div>
+				<div className='col-3'>
+					{/* FIXME: Replace for other special field */}
+					<div className='form-group'>
+						<label className='small' htmlFor='qty'>
+							Qty:
+						</label>
+						<input
+							className='form-control'
+							id='qty'
+							type='number'
+							placeholder='0'
+							value={order.qty || ''}
+							onChange={onInputChange}
+						/>
+					</div>
+				</div>
+			</div>
+			<pre>{JSON.stringify(order, null, 4)}</pre>
 		</FormPage>
 	)
 }
