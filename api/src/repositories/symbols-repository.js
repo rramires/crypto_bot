@@ -1,21 +1,21 @@
 import { where } from 'sequelize'
 
-import { symbolsModel } from '../models/symbols-model.js'
+import { symbolModel } from '../models/symbol-model.js'
 
 export function deleteAllSymbols() {
-	return symbolsModel.destroy({ truncate: true })
+	return symbolModel.destroy({ truncate: true })
 }
 
 export function bulkInsertSymbols(symbols) {
-	return symbolsModel.bulkCreate(symbols)
+	return symbolModel.bulkCreate(symbols)
 }
 
 export function getAllSymbols() {
-	return symbolsModel.findAll()
+	return symbolModel.findAll()
 }
 
 export function getOneSymbol(symbol) {
-	return symbolsModel.findOne({
+	return symbolModel.findOne({
 		where: { symbol },
 	})
 }
