@@ -2,7 +2,7 @@ import { app } from './app.js'
 import { emInit } from './app-em.js'
 import { wsInit } from './app-ws.js'
 import { database } from './db.js'
-import { getActiveUsers } from './repositories/user-repository.js'
+import { getActiveUsers } from './repositories/users-repository.js'
 import { logger } from './utils/logger.js'
 
 async function start() {

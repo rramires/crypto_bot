@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 
-import { getUserByEmail } from '../repositories/user-repository.js'
+import { getUserByEmail } from '../repositories/users-repository.js'
 import { generateToken } from '../utils/auth-service.js'
 import { addToBlacklist } from '../utils/blacklist.js'
 
