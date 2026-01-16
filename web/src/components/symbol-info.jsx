@@ -35,15 +35,20 @@ export function SymbolInfo({ symbol }) {
 		return `${import.meta.env.VITE_BWS_URL}/ws/${symbol.toLowerCase()}@ticker`
 	}
 
-	const { lastJsonMessage } = useWebSocket(getWebStreamUrl(), {
+	useWebSocket(getWebStreamUrl(), {
 		onOpen: () =>
 			console.log(`Connected to Binance Stream: ${symbol}@ticker`),
-		onMessage: () => {
-			if (lastJsonMessage) {
+		onMessage: (message) => {
+			if (!message) {
+				return
+			}
+
+			const data = JSON.parse(message.data)
+			if (data) {
 				setInfo((prevState) => ({
 					...prevState,
-					yesterday: lastJsonMessage.o,
-					now: lastJsonMessage.c,
+					yesterday: data.o,
+					now: data.c,
 				}))
 			}
 		},

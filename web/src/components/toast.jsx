@@ -1,14 +1,15 @@
 import useWebSocket from 'react-use-websocket'
 
 export function Toast() {
-	const { lastJsonMessage } = useWebSocket(import.meta.env.VITE_WS_URL, {
+	useWebSocket(import.meta.env.VITE_WS_URL, {
 		onOpen: () => console.log('Connected to App, WS'),
-		onMessage: () => {
-			if (
-				lastJsonMessage &&
-				lastJsonMessage.notification &&
-				lastJsonMessage.notification.text
-			) {
+		onMessage: (message) => {
+			if (!message) {
+				return
+			}
+
+			const data = JSON.parse(message.data)
+			if (data && data.notification && data.notification.text) {
 				const notyf = new window.Notyf({
 					position: { x: 'right', y: 'top' },
 					duration: 0,
@@ -27,8 +28,8 @@ export function Toast() {
 				})
 
 				notyf.open({
-					type: lastJsonMessage.notification.type,
-					message: lastJsonMessage.notification.text,
+					type: data.notification.type,
+					message: data.notification.text,
 				})
 			}
 		},
