@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { OrderType } from '../../components/order-type'
 import { QuantityInput } from '../../components/quantity-input'
@@ -7,9 +8,12 @@ import { SelectSymbol } from '../../components/select-symbol'
 import { SymbolInfo } from '../../components/symbol-info'
 import { WalletSummary } from '../../components/wallet-summary'
 import { LIMIT_TYPES, STOP_TYPES } from '../../services/exchange-service'
+import { placeOrder } from '../../services/orders-service'
 import { FormPage } from '../form-page'
 
 export function NewOrder() {
+	const navigate = useNavigate()
+
 	const [order, setOrder] = useState({
 		side: 'BUY',
 		type: 'MARKET',
@@ -39,7 +43,12 @@ export function NewOrder() {
 
 	function btnSendClick() {
 		setError('')
-		console.log(order)
+		placeOrder(order)
+			.then(() => navigate('/orders'))
+			.catch((err) => {
+				console.error(err)
+				setError(err)
+			})
 	}
 
 	return (
