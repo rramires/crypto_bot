@@ -8,6 +8,7 @@ import { getBalance } from './controllers/exchange-controller.js'
 import { authMiddleware } from './middlewares/auth-middleware.js'
 import { errorMiddleware } from './middlewares/error-middelware.js'
 import { brainRouter } from './routers/brain-router.js'
+import { ordersRouter } from './routers/orders-router.js'
 import { symbolsRouter } from './routers/symbols-router.js'
 
 export const app = express()
@@ -30,6 +31,7 @@ app.post('/logout', doLogout)
 app.use('/exchange/balance', authMiddleware, getBalance)
 app.use('/brain', authMiddleware, brainRouter)
 app.use('/symbols', authMiddleware, symbolsRouter)
+app.use('/orders', authMiddleware, ordersRouter)
 
 // error
 app.use(errorMiddleware)
