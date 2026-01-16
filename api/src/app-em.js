@@ -1,4 +1,5 @@
 import { Brain } from './brain.js'
+import { updateOrderByOrderId } from './repositories/orders-repository.js'
 import { getAllSymbols } from './repositories/symbols-repository.js'
 import { Exchange } from './utils/exchange.js'
 import { logger } from './utils/logger.js'
@@ -99,6 +100,51 @@ async function proccessBalanceData(userId, data) {
 	await loadWallet(userId, true)
 }
 
+function scheduledOrderUpdate(order, userId) {
+	const MAX_ATTEMPTS = 10
+	let attempts = 0
+
+	const intervalId = setInterval(async () => {
+		attempts++
+
+		try {
+			const updatedOrder = await updateOrderByOrderId(order.orderId, order)
+
+			if (updatedOrder) {
+				clearInterval(intervalId)
+
+				const type = order.status.indexOf('FILLED') !== -1 ? 'success' : 'error'
+
+				WSS.broadcast({
+					notification: {
+						text: `Order #${updatedOrder.id} was updated as ${order.status}`,
+						type,
+					},
+				})
+
+				const brain = Brain.getInstance()
+				brain.updateMemory(
+					order.symbol,
+					`LAST_ORDER_${userId}`,
+					null,
+					updatedOrder.get({ plain: true }),
+				)
+			} else if (attempts >= MAX_ATTEMPTS) {
+				clearInterval(intervalId)
+
+				logger(
+					`U-${userId}`,
+					`Order ${order.orderId} update timeout after ${MAX_ATTEMPTS} attempts`,
+				)
+			}
+		} catch (err) {
+			clearInterval(intervalId)
+
+			logger(`U-${userId}`, err)
+		}
+	}, 1000)
+}
+
 async function proccessExecutionData(userId, data) {
 	// Docs:
 	// https://github.com/binance/binance-spot-api-docs/blob/master/user-data-stream.md#order-update
@@ -132,7 +178,9 @@ async function proccessExecutionData(userId, data) {
 	} else if (order.status === 'REJECTED') {
 		order.obs = data.r // Order reject reason
 	}
-	// TODO: Implement order update
+
+	// Order update
+	scheduledOrderUpdate(order, userId)
 }
 
 async function userDataMonitor(userId) {
