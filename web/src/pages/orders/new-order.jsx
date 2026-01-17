@@ -51,6 +51,21 @@ export function NewOrder() {
 			})
 	}
 
+	/*
+	TODO: Implement validation of the Quantity field, using Min Notional and Min Lot Size.
+
+	TODO: Implement validation for the TrailingDelta field, using this table:
+		BIPS	Percentage	Multiplier
+		1		0.01%		0.0001
+		10		0.1%		0.001
+		100		1%			0.01
+		1000	10%			0.1
+		Docs: https://github.com/binance/binance-spot-api-docs/blob/master/faqs/trailing-stop-faq.md#what-are-bips
+
+		https://developers.binance.com/docs/binance-spot-api-docs/filters#min_notional  
+		https://developers.binance.com/docs/binance-spot-api-docs/filters#lot_size	
+	*/
+
 	return (
 		<FormPage title='New Spot Order'>
 			<div className='row mb-3'>
@@ -162,7 +177,7 @@ export function NewOrder() {
 					</div>
 				)}
 			</div>
-			<pre>{JSON.stringify(order, null, 4)}</pre>
+			{/* <pre>{JSON.stringify(order, null, 4)}</pre> */}
 		</FormPage>
 	)
 }
