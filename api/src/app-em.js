@@ -1,5 +1,5 @@
 import { Brain } from './brain.js'
-import { updateOrderByOrderId } from './repositories/orders-repository.js'
+import { getLastFilledOrders, updateOrderByOrderId } from './repositories/orders-repository.js'
 import { getAllSymbols } from './repositories/symbols-repository.js'
 import { Exchange } from './utils/exchange.js'
 import { logger } from './utils/logger.js'
@@ -202,6 +202,25 @@ async function userDataMonitor(userId) {
 	}
 }
 
+async function loadLastExecutedOrders(userId) {
+	const lastOrders = await getLastFilledOrders(userId)
+	const brain = Brain.getInstance()
+
+	await Promise.all(
+		lastOrders.map((order) =>
+			brain.updateMemory(
+				order.symbol,
+				`LAST_ORDER_${userId}`,
+				null,
+				order.get({ plain: true }),
+				false,
+			),
+		),
+	)
+
+	logger('system', 'Loaded last executed orders!')
+}
+
 export async function emInit(userId, wssInstance) {
 	WSS = wssInstance
 
@@ -214,7 +233,8 @@ export async function emInit(userId, wssInstance) {
 	/// User data monitoring
 	await userDataMonitor(userId)
 
-	// TODO: Load last executed orders
+	// Load last executed orders
+	loadLastExecutedOrders(userId)
 
 	// TODO: Assets monitoring (candles)
 

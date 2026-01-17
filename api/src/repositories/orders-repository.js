@@ -1,3 +1,5 @@
+import Sequelize from 'sequelize'
+
 import { orderModel } from '../models/order-model.js'
 
 export const orderTypes = {
@@ -121,4 +123,22 @@ export async function updateOrderByOrderId(orderId, newOrder) {
 		return false
 	}
 	return updateOrder(order, newOrder)
+}
+
+export async function getLastFilledOrders(userId) {
+	// FIXME: Testing more efficient methods using SQL.
+	// Find the highest IDs for each symbol
+	const idObjects = await orderModel.findAll({
+		where: {
+			userId,
+			status: orderStatus.FILLED,
+		},
+		group: 'symbol',
+		attributes: [Sequelize.fn('max', Sequelize.col('id'))],
+		raw: true,
+	})
+	// Convert in array
+	const ids = idObjects.map((o) => Object.values(o)).flat()
+	// find with this IDs - Select IN
+	return orderModel.findAll({ where: { id: ids } })
 }
