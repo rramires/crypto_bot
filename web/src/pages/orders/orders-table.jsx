@@ -1,4 +1,19 @@
+import { useEffect, useState } from 'react'
+
+import { getOrders } from '../../services/orders-service'
+import { OrderRow } from './order-row'
+
 export function OrdersTable() {
+	const [orders, setOrders] = useState([])
+
+	useEffect(() => {
+		getOrders()
+			.then((result) => {
+				setOrders(result.rows)
+			})
+			.catch((err) => console.error(err))
+	}, [])
+
 	return (
 		<div className='card card-body border-0 shadow table-wrapper table-responsive'>
 			<table className='table table-hover'>
@@ -13,9 +28,15 @@ export function OrdersTable() {
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td colSpan={6}>Teste</td>
-					</tr>
+					{orders ? (
+						orders.map((order) => (
+							<OrderRow key={order.id} data={order} />
+						))
+					) : (
+						<tr>
+							<td colSpan={6}>No orders found.</td>
+						</tr>
+					)}
 				</tbody>
 			</table>
 		</div>
