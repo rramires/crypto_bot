@@ -1,18 +1,34 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
+import { Pagination } from '../../components/pagination'
 import { getOrders } from '../../services/orders-service'
 import { OrderRow } from './order-row'
 
 export function OrdersTable() {
+	const location = useLocation()
+	const page = new URLSearchParams(location.search).get('page') || '1'
+
 	const [orders, setOrders] = useState([])
+	const [count, setCount] = useState(0)
+	const [message, setMessage] = useState('Loading orders...')
 
 	useEffect(() => {
-		getOrders()
+		getOrders(page)
 			.then((result) => {
 				setOrders(result.rows)
+				setCount(result.count)
+				setMessage('')
 			})
-			.catch((err) => console.error(err))
-	}, [])
+			.catch((err) => {
+				console.error(err.response ? err.response.data : err)
+				setMessage(
+					err.response
+						? JSON.stringify(err.response.data)
+						: err.message,
+				)
+			})
+	}, [page])
 
 	return (
 		<div className='card card-body border-0 shadow table-wrapper table-responsive'>
@@ -34,11 +50,12 @@ export function OrdersTable() {
 						))
 					) : (
 						<tr>
-							<td colSpan={6}>No orders found.</td>
+							<td colSpan={6}>{message}</td>
 						</tr>
 					)}
 				</tbody>
 			</table>
+			<Pagination count={count} />
 		</div>
 	)
 }
